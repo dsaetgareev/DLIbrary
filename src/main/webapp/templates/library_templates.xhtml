@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dinis
+  Date: 25.11.17
+  Time: 20:56
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title><ui:insert name="title"/></title>
+</h:head>
+
+<h:body>
+
+    <div class="container">
+
+        <div class="header">
+            <ui:insert name="header">
+                <ui:include src="/templates/header.xhtml"/>
+            </ui:insert>
+            <!--end header-->
+        </div>
+
+        <div class="middle">
+
+            <div class="left_menu">
+                <ui:insert name="left_menu">
+                    <ui:include src="/templates/left_menu.xhtml"/>
+                </ui:insert>
+                <!--end left_menu-->
+            </div>
+
+            <div class="content">
+
+                <p><strong><ui:insert name="books_count"/> </strong></p>
+
+                <div class="content_books">
+                    <ui:insert name="content">
+                        <ui:include src="/templates/content.xhtml"/>
+                    </ui:insert>
+                    <!--end content_books-->
+                </div>
+
+                <div class="pager">
+
+                    <!--end pager-->
+                </div>
+                <!--end content-->
+            </div>
+            <!--end middle-->
+        </div>
+
+        <div class="footer">
+            <ui:insert name="footer">
+                <ui:include src="/templates/footer.xhtml"/>
+            </ui:insert>
+        </div>
+        <!--end container-->
+    </div>
+
+</h:body>
+
+</html>
