@@ -12,6 +12,23 @@
         </resource-bundle>
     </application>
 
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>books</from-outcome>
+            <to-view-id>/pages/books.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <validator>
+        <validator-id>LoginValidator</validator-id>
+        <validator-class>ru.dinis.library.validators.LoginValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>PasswordValidator</validator-id>
+        <validator-class>ru.dinis.library.validators.PasswordValidator</validator-class>
+    </validator>
+
     <managed-bean>
         <managed-bean-name>user</managed-bean-name>
         <managed-bean-class>ru.dinis.library.beans.User</managed-bean-class>
