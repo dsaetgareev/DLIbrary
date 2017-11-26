@@ -7,7 +7,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  * class DMManager gets connection with database.
  * User: Dinis Saetgareev (dinis0086@gmail.com)
@@ -33,5 +36,23 @@ public class DBManager {
             LOG.error(e.getMessage(), e);
         }
         return conn;
+    }
+
+    /**
+     * closes connection.
+     * @param rs - result set
+     * @param stm -statement
+     * @param conn - connection
+     */
+    public static void closeConnection(ResultSet rs, Statement stm, Connection conn) {
+        try {
+            if (rs != null) {
+                rs.close();
+                stm.close();
+                conn.close();
+            }
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
 }
