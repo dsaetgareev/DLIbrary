@@ -40,7 +40,7 @@ public class BooksController implements Serializable {
     /**
      * total all books.
      */
-    private long totalBooksCount;
+    private int totalBooksCount;
     /**
      * list of page numbers.
      */
@@ -60,7 +60,7 @@ public class BooksController implements Serializable {
     /**
      * request from pager.
      */
-    private boolean requestFromPager;
+    private boolean requestFromPager = false;
     /**
      * search type.
      */
@@ -69,6 +69,13 @@ public class BooksController implements Serializable {
      * search string.
      */
     private String searchString;
+
+    /**
+     * constructor.
+     */
+    public BooksController() {
+        fillBooksAll();
+    }
 
     /**
      * submit values.
@@ -104,7 +111,7 @@ public class BooksController implements Serializable {
             conn = DBManager.getConnection();
             stm = conn.createStatement();
             if (!requestFromPager) {
-                rs = stm.executeQuery(sqlBuilder.toString());
+                rs = stm.executeQuery(sql);
                 rs.last();
                 this.totalBooksCount = rs.getRow();
                 fillPageNumbers(this.totalBooksCount, this.booksOnPage);
@@ -129,21 +136,31 @@ public class BooksController implements Serializable {
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
+            LOGGER.info(e.getMessage(), e);
         } finally {
-            DBManager.closeConnection(rs, stm, conn);
+            try {
+                if (rs != null) {
+                    rs.close();
+                    stm.close();
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
     }
 
     /**
      * fill all books.
      */
-    public void fillBooksAll() {
-        this.fillBooksBySql("SELECT b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author," +
-                "b.publish_year, p.name as publisher, b.descr FROM book b" +
-                "INNER JOIN author a ON b.author_id = a.id" +
-                "INNER JOIN genre g ON b.genre_id = g.id" +
-                "INNER JOIN publisher p ON b.publisher_id = p.id" +
-                "ORDER BY b.name ");
+    public String fillBooksAll() {
+        this.fillBooksBySql("select b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author," +
+                "b.publish_year, p.name as publisher, b.descr FROM book b " +
+                "INNER JOIN author a ON b.author_id = a.id " +
+                "INNER JOIN genre g ON b.genre_id = g.id " +
+                "INNER JOIN publisher p ON b.publisher_id = p.id " +
+                "order by b.name ");
+        return "books";
     }
 
     /**
@@ -153,11 +170,11 @@ public class BooksController implements Serializable {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         this.selectedGenreId = Integer.valueOf(params.get("genre_id"));
         submitValues(' ',this.selectedGenreId, 1, false);
-        this.fillBooksBySql("SELECT b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author," +
-                "b.publish_year, p.name as publisher, b.descr FROM book b" +
-                "INNER JOIN author a ON b.author_id = a.id" +
-                "INNER JOIN genre g ON b.genre_id = g.id" +
-                "INNER JOIN publisher p ON b.publisher_id = p.id" +
+        this.fillBooksBySql("SELECT b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author, " +
+                "b.publish_year, p.name as publisher, b.descr FROM book b " +
+                "INNER JOIN author a ON b.author_id = a.id " +
+                "INNER JOIN genre g ON b.genre_id = g.id " +
+                "INNER JOIN publisher p ON b.publisher_id = p.id " +
                 "WHERE b.genre_id = " + this.selectedGenreId +
                 " ORDER BY b.name ");
     }
@@ -170,30 +187,29 @@ public class BooksController implements Serializable {
         this.selectedLetter = params.get("letter").charAt(0);
         submitValues(this.selectedLetter,-1, 1, false);
         this.fillBooksBySql("SELECT b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author," +
-                "b.publish_year, p.name as publisher, b.descr FROM book b" +
-                "INNER JOIN author a ON b.author_id = a.id" +
-                "INNER JOIN genre g ON b.genre_id = g.id" +
-                "INNER JOIN publisher p ON b.publisher_id = p.id" +
-                "WHERE substr(b.name, 1, 1) = " + this.selectedLetter +
-                " ORDER BY b.name ");
+                "b.publish_year, p.name as publisher, b.descr FROM book b " +
+                "INNER JOIN author a ON b.author_id = a.id " +
+                "INNER JOIN genre g ON b.genre_id = g.id " +
+                "INNER JOIN publisher p ON b.publisher_id = p.id " +
+                "WHERE substr(b.name, 1, 1) = '" + this.selectedLetter +
+                "' ORDER BY b.name ");
     }
 
     /**
      * fill books by search.
      */
     public void fillBooksBySearch() {
-        submitValues(' ',0, 1, false);
+        submitValues(' ',-1, 1, false);
         StringBuilder stringBuilder = new StringBuilder("SELECT b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author," +
-                "b.publish_year, p.name as publisher, b.descr FROM book b" +
-                "INNER JOIN author a ON b.author_id = a.id" +
-                "INNER JOIN genre g ON b.genre_id = g.id" +
-                "INNER JOIN publisher p ON b.publisher_id = p.id" +
-                "ORDER BY b.name ");
+                "b.publish_year, p.name as publisher, b.descr FROM book b " +
+                "INNER JOIN author a ON b.author_id = a.id " +
+                "INNER JOIN genre g ON b.genre_id = g.id " +
+                "INNER JOIN publisher p ON b.publisher_id = p.id ");
         if (this.searchType == SearchType.AUTHOR) {
-            stringBuilder.append(" WHERE LOWER(author) LIKE '%" + this.searchString.toLowerCase() + "%' ORDER BY b.name");
+            stringBuilder.append(" WHERE LOWER(author) LIKE '%" + this.searchString.toLowerCase() + "%' order by b.name");
         }
         if (this.searchType == SearchType.TITLE) {
-            stringBuilder.append(" WHERE LOWER(b.name) LIKE '%" + this.searchString.toLowerCase() + "%' ORDER BY b.name");
+            stringBuilder.append(" WHERE LOWER(b.name) LIKE '%" + this.searchString.toLowerCase() + "%' order by b.name");
         }
         this.fillBooksBySql(stringBuilder.toString());
     }
@@ -264,8 +280,8 @@ public class BooksController implements Serializable {
      * @param totalBooksCount - total books
      * @param booksOnPage books on page
      */
-    public void fillPageNumbers(long totalBooksCount, int booksOnPage) {
-        int count = booksOnPage > 0 ? (int) (totalBooksCount/booksOnPage) + 1 : 0;
+    public void fillPageNumbers(int totalBooksCount, int booksOnPage) {
+        int count = booksOnPage > 0 ? (int) ((totalBooksCount/booksOnPage) + 1) : 0;
         this.pageNumbers.clear();
         for (int i = 1; i <= count; i++) {
             this.pageNumbers.add(i);
@@ -296,11 +312,11 @@ public class BooksController implements Serializable {
         this.selectedPageNumber = selectedPageNumber;
     }
 
-    public long getTotalBooksCount() {
+    public int getTotalBooksCount() {
         return totalBooksCount;
     }
 
-    public void setTotalBooksCount(long totalBooksCount) {
+    public void setTotalBooksCount(int totalBooksCount) {
         this.totalBooksCount = totalBooksCount;
     }
 

@@ -6,10 +6,7 @@ import ru.dinis.library.beans.Genre;
 import ru.dinis.library.database.DBManager;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 /**
  * class Genre controller.
@@ -41,12 +38,12 @@ public class GenreController implements Serializable {
         this.genreList = new ArrayList<>();
 
         Connection conn = null;
-        PreparedStatement ps = null;
+        Statement stm = null;
         ResultSet rs = null;
         try {
             conn = DBManager.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM genre ORDER BY name");
-            rs = ps.executeQuery();
+            stm = conn.createStatement();
+            rs = stm.executeQuery("SELECT * FROM genre ORDER BY name ");
             while (rs.next()) {
                 Genre genre = new Genre();
                 genre.setId(rs.getInt("id"));
@@ -56,7 +53,15 @@ public class GenreController implements Serializable {
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
-            DBManager.closeConnection(rs, ps, conn);
+            try {
+                if (rs != null) {
+                    conn.close();
+                    stm.close();
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
     }
 

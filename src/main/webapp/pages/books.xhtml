@@ -10,14 +10,76 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:head>
     <title>Title</title>
 </h:head>
 
 <h:body>
+    <ui:composition template="/templates/library_templates.xhtml">
+        <ui:define name="title">
+            #{msg.books_title}
+        </ui:define>
 
+        <ui:define name="books_count">
+            <h:outputText value="#{msg.books_count}: #{booksController.totalBooksCount}" id="booksCount"/>
+        </ui:define>
+
+        <ui:define name="content">
+            <h:dataTable id="booksList" value="#{booksController.currentBookList}" var="book"
+                         cellspacing="10px" columnClasses="col1, col2, col3">
+                <h:column>
+                    <h:graphicImage value="/ShowImage?genre_id=#{book.id}" width="160" height="220"/>
+                </h:column>
+
+                <h:column>
+                    <p>#{book.name}</p>
+                    <p><strong>#{msg.author_name}</strong>#{book.author}</p>
+                    <p><strong>#{msg.page_count}</strong>#{book.pageCount}</p>
+                    <p><strong>#{msg.publisher}</strong>#{book.publisher}</p>
+                    <p><strong>#{msg.publisher_date}</strong>#{book.publishDate}</p>
+                    <p><strong>#{msg.isbn}</strong>#{book.isbn}</p>
+                    <h:form>
+                        <h:graphicImage library="images" name="book.gif"/>
+                       <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank" styleClass="content_link">
+                           <h:outputText value="#{msg.read}"/>
+                           <f:param value="#{book.id}" name="content_id"/>
+                       </h:outputLink>
+                        <h:graphicImage library="images" name="download.png"/>
+                        <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank" styleClass="save_link">
+                            <h:outputText value="#{msg.dounload}"/>
+                            <f:param value="#{book.id}" name="content_id"/>
+                            <f:param value="true" name="save"/>
+                            <f:param value="#{book.name}" name="filename"/>
+                        </h:outputLink>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <div class="book_details">
+                        <p><strong>#{msg.book_descr}</strong></p>
+                        <p>#{book.descr}</p>
+                    </div>
+                </h:column>
+            </h:dataTable>
+        </ui:define>
+
+        <ui:define name="paginator">
+            <h:form id="pager1" rendered="#{booksController.totalBooksCount > booksController.booksOnPage}">
+            #{msg.paper}:
+            <ui:repeat value="#{booksController.pageNumbers}" var="pageNumbers">
+                <h:commandLink value="#{pageNumbers}"
+                               styleClass="#{pageNumbers == booksController.selectedPageNumber ? 'selected_page' : ''}">
+                    <f:param value="#{pageNumbers}" name="page_number"/>
+                    <f:ajax event="click" render="@form :pages :booksList :lettersForm"
+                            listener="#{booksController.selectedPage}"/>
+                </h:commandLink>
+            </ui:repeat>
+            </h:form>
+        </ui:define>
+
+    </ui:composition>
 </h:body>
 
 </html>

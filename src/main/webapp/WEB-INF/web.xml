@@ -29,6 +29,23 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ShowImage</servlet-name>
+    <servlet-class>ru.dinis.library.servlets.ShowImage</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowImage</servlet-name>
+    <url-pattern>/ShowImage</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PdfContent</servlet-name>
+    <servlet-class>ru.dinis.library.servlets.PdfContent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PdfContent</servlet-name>
+    <url-pattern>/PdfContent</url-pattern>
+  </servlet-mapping>
 
   <resource-ref>
     <res-ref-name>jdbc/library</res-ref-name>

@@ -19,6 +19,20 @@
             <to-view-id>/pages/books.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/books.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>books</from-outcome>
+            <to-view-id>/pages/books.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/books.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 
     <validator>
         <validator-id>LoginValidator</validator-id>
@@ -32,6 +46,36 @@
     <managed-bean>
         <managed-bean-name>user</managed-bean-name>
         <managed-bean-class>ru.dinis.library.beans.User</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>book</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.beans.Book</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>genre</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.beans.Genre</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>booksController</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.controllers.BooksController</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>genreController</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.controllers.GenreController</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>letterController</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.controllers.LetterController</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>searchController</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.controllers.SearchController</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 </faces-config>

@@ -10,14 +10,56 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:head>
-    <title>Title</title>
+    <title>Header</title>
+    <h:outputStylesheet library="css" name="style_main.css"/>
 </h:head>
 
 <h:body>
-    
+    <ui:composition>
+        <div class="logo">
+            <h:graphicImage library="images" name="library.png"/>
+            <!--end logo-->
+        </div>
+        <div class="descr">
+            <h3>#{msg.descr}</h3>
+            <!--end descr-->
+        </div>
+        <div class="welcome">
+            <p>#{msg.welcome_user}, #{user.name}</p>
+            <h:form>
+                <h:commandLink action="/index?faces-redirect=true" value="#{msg.exit}"/>
+            </h:form>
+            <!--end welcome-->
+        </div>
+
+        <div class="search_div">
+            <h:form styleClass="search_form">
+                <h:inputText id="search_string" styleClass="search_string" value="#{booksController.searchString}"/>
+                <h:commandButton action="#{booksController.fillBooksBySearch}" value="#{msg.search_button}" styleClass="command_button"/>
+                <h:selectOneMenu styleClass="search_type_dropdown" value="#{booksController.searchType}">
+                    <f:selectItems value="#{searchController.searchList}"/>
+                </h:selectOneMenu>
+            </h:form>
+            <!--end search_div-->
+        </div>
+        <div class="letters">
+            <h:form styleClass="lettersForm">
+                <ui:repeat value="#{letterController.russianLetters}" var="letter">
+                    <h:commandLink value="#{letter}" styleClass="#{letter == booksController.selectedLetter ?
+        'selected_letter' : ''}">
+                        <f:param value="#{letter}" name="letter"/>
+                        <f:ajax event="click" render="@form :booksCount :booksList :pages :lettersForm"
+                                listener="#{booksController.fillBooksByLetter}"/>
+                    </h:commandLink>
+                </ui:repeat>
+            </h:form>
+            <!--end letters-->
+        </div>
+    </ui:composition>
 </h:body>
 
 </html>

@@ -14,6 +14,7 @@
 
 <h:head>
     <title><ui:insert name="title"/></title>
+    <h:outputStylesheet library="css" name="style_main.css"/>
 </h:head>
 
 <h:body>
@@ -48,8 +49,7 @@
                 </div>
 
                 <div class="pager">
-
-                    <!--end pager-->
+                   <h:panelGroup id="pages" layout="block"><ui:insert name="paginator"/></h:panelGroup>                    <!--end pager-->
                 </div>
                 <!--end content-->
             </div>

@@ -11,8 +11,8 @@ public class LetterController implements Serializable {
      * gets letter list.
      * @return - letter list
      */
-    public char[] getRussianLetters() {
-        char[] letters = new char[33];
+    public Character[] getRussianLetters() {
+        Character[] letters = new Character[33];
         letters[0] = 'А';
         letters[1] = 'Б';
         letters[2] = 'В';

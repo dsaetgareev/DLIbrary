@@ -10,14 +10,28 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:head>
     <title>Title</title>
+    <h:outputStylesheet library="css" name="style_main.css"/>
 </h:head>
 
 <h:body>
-    
+    <ui:composition>
+        <h4>#{msg.genres}</h4>
+        <h:form styleClass="genres">
+            <ui:repeat value="#{genreController.genreList}" var="genre">
+                <h:commandLink value="#{genre.name}" styleClass="#{genre.id == booksController.selectedGenreId ?
+                'selected_genre' : ''}">
+                    <f:param value="#{genre.id}" name="genre_id"/>
+                    <f:ajax event="click" render=":booksCount @form :booksList :pages :lettersForm"
+                            listener="#{booksController.fillBooksByGenre}"/>
+                </h:commandLink>
+            </ui:repeat>
+        </h:form>
+    </ui:composition>
 </h:body>
 
 </html>
