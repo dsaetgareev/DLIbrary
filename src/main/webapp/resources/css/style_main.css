@@ -363,3 +363,17 @@ a:hover, a:active, a:focus {
     float:left;
 }
 
+.adm_link {
+    font-weight: bold;
+    color: #378de5;
+    font-size:10px;
+    margin: 5px;
+    margin-left: 10px;
+}
+
+.descr_edit {
+    width: 298px;
+    height: 269px;
+
+}
+

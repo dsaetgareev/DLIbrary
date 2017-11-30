@@ -48,7 +48,11 @@ public class DBManager {
         try {
             if (rs != null) {
                 rs.close();
+            }
+            if (stm != null) {
                 stm.close();
+            }
+            if (conn != null) {
                 conn.close();
             }
         } catch (SQLException e) {

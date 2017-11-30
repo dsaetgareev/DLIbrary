@@ -26,7 +26,7 @@
                 <h:commandLink value="#{genre.name}" styleClass="#{genre.id == booksController.selectedGenreId ?
                 'selected_genre' : ''}">
                     <f:param value="#{genre.id}" name="genre_id"/>
-                    <f:ajax event="click" render=":booksCount @form :booksList :pages :lettersForm"
+                    <f:ajax event="click" render=":booksCount @form :booksForm:booksList :pages :lettersForm"
                             listener="#{booksController.fillBooksByGenre}"/>
                 </h:commandLink>
             </ui:repeat>

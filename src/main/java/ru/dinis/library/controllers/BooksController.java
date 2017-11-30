@@ -8,10 +8,7 @@ import ru.dinis.library.enums.SearchType;
 
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -69,6 +66,10 @@ public class BooksController implements Serializable {
      * search string.
      */
     private String searchString;
+    /**
+     * edit mode.
+     */
+    private boolean editMode;
 
     /**
      * constructor.
@@ -90,6 +91,7 @@ public class BooksController implements Serializable {
         this.selectedGenreId = selectedGenreId;
         this.selectedPageNumber = selectedPageNumber;
         this.requestFromPager = requestFromPager;
+        this.editMode = false;
     }
 
     /**
@@ -138,15 +140,7 @@ public class BooksController implements Serializable {
             LOGGER.error(e.getMessage(), e);
             LOGGER.info(e.getMessage(), e);
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                    stm.close();
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+                DBManager.closeConnection(rs, stm, conn);
         }
     }
 
@@ -220,7 +214,7 @@ public class BooksController implements Serializable {
     public void selectedPage() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         this.selectedPageNumber = Integer.valueOf(params.get("page_number"));
-        this.requestFromPager = true;
+        this.submitValues(' ', -1, this.selectedPageNumber, true);
         fillBooksBySql(this.currentSql);
     }
 
@@ -286,6 +280,53 @@ public class BooksController implements Serializable {
         for (int i = 1; i <= count; i++) {
             this.pageNumbers.add(i);
         }
+    }
+
+    public void editBooks() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBManager.getConnection();
+            ps = conn.prepareStatement("UPDATE book SET name=?, page_count=?, isbn=?, publish_year=?, descr=? " +
+                    "WHERE id=?");
+
+            for (Book book : this.currentBookList) {
+                if (!book.isEdit()) continue;
+                ps.setString(1, book.getName());
+                ps.setInt(2, book.getPageCount());
+                ps.setString(3, book.getIsbn());
+                ps.setInt(4, book.getPublishDate());
+                ps.setString(5, book.getDescr());
+                ps.setLong(6, book.getId());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }finally {
+            DBManager.closeConnection(null, ps, conn);
+            chancelEdit();
+        }
+    }
+
+    public void chancelEdit() {
+        this.editMode = false;
+        for (Book book : this.currentBookList) {
+            book.setEdit(false);
+        }
+    }
+
+    public void enableEdit() {
+        this.editMode = true;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 
     public ArrayList<Book> getCurrentBookList() {

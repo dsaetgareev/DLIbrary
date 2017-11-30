@@ -28,6 +28,7 @@
         </ui:define>
 
         <ui:define name="content">
+            <h:form id="booksForm">
             <h:dataTable id="booksList" value="#{booksController.currentBookList}" var="book"
                          cellspacing="10px" columnClasses="col1, col2, col3">
                 <h:column>
@@ -35,34 +36,85 @@
                 </h:column>
 
                 <h:column>
-                    <p>#{book.name}</p>
-                    <p><strong>#{msg.author_name}</strong>#{book.author}</p>
-                    <p><strong>#{msg.page_count}</strong>#{book.pageCount}</p>
-                    <p><strong>#{msg.publisher}</strong>#{book.publisher}</p>
-                    <p><strong>#{msg.publisher_date}</strong>#{book.publishDate}</p>
-                    <p><strong>#{msg.isbn}</strong>#{book.isbn}</p>
-                    <h:form>
+                    <p>
+                        <h:outputText value="#{book.name}" rendered="#{!book.edit}"/>
+                        <h:inputText value="#{book.name}" rendered="#{booksController.editMode and book.edit}"/>
+                    </p>
+                    <p><strong>#{msg.author_name}</strong>
+                        <h:outputText value="#{book.author}" rendered="#{!book.edit}"/>
+                        <h:inputText value="#{book.author}" rendered="#{booksController.editMode and book.edit}"/>
+                    </p>
+                    <p><strong>#{msg.page_count}</strong>
+                        <h:outputText value="#{book.pageCount}" rendered="#{!book.edit}"/>
+                        <h:inputText value="#{book.pageCount}" rendered="#{booksController.editMode and book.edit}"/>
+                    </p>
+                    <p><strong>#{msg.publisher}</strong>
+                        <h:outputText value="#{book.publisher}" rendered="#{!book.edit}"/>
+                        <h:inputText value="#{book.publisher}" rendered="#{booksController.editMode and book.edit}"/>
+                    </p>
+                    <p><strong>#{msg.publisher_date}</strong>
+                        <h:outputText value="#{book.publishDate}" rendered="#{!book.edit}"/>
+                        <h:inputText value="#{book.publishDate}" rendered="#{booksController.editMode and book.edit}"/>
+                    </p>
+                    <p><strong>#{msg.isbn}</strong>
+                        <h:outputText value="#{book.isbn}" rendered="#{!book.edit}"/>
+                        <h:inputText value="#{book.isbn}" rendered="#{booksController.editMode and book.edit}"/>
+                    </p>
+                    <h:form rendered="#{!book.edit}">
                         <h:graphicImage library="images" name="book.gif"/>
-                       <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank" styleClass="content_link">
+                       <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank" styleClass="content_link"
+                       rendered="#{!book.edit}">
                            <h:outputText value="#{msg.read}"/>
                            <f:param value="#{book.id}" name="content_id"/>
                        </h:outputLink>
                         <h:graphicImage library="images" name="download.png"/>
-                        <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank" styleClass="save_link">
+                        <h:outputLink value="#{request.contextPath}/PdfContent" target="_blank" styleClass="save_link"
+                        rendered="#{!book.edit}">
                             <h:outputText value="#{msg.dounload}"/>
                             <f:param value="#{book.id}" name="content_id"/>
                             <f:param value="true" name="save"/>
                             <f:param value="#{book.name}" name="filename"/>
                         </h:outputLink>
                     </h:form>
+                    <h:panelGroup id="admin_tools">
+                        <h:commandLink rendered="#{!booksController.editMode}" styleClass="adm_link">
+                            <h:outputText value="#{msg.add_book}" styleClass="adm_link"/>
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandLink>
+                        <h:commandLink action="#{booksController.enableEdit}" rendered="#{!booksController.editMode}"
+                                       >
+                            <h:outputText value="#{msg.edit}" styleClass="adm_link"/>
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandLink>
+
+                        <h:commandButton action="#{booksController.editBooks}" value="#{msg.save}"
+                                         rendered="#{booksController.editMode}">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandButton>
+                        <h:commandButton action="#{booksController.chancelEdit}" value="#{msg.cancel}"
+                                         rendered="#{booksController.editMode}" immediate="true">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandButton>
+                    </h:panelGroup>
                 </h:column>
                 <h:column>
                     <div class="book_details">
                         <p><strong>#{msg.book_descr}</strong></p>
-                        <p>#{book.descr}</p>
+                        <p>
+                            <h:outputText value="#{book.descr}" rendered="#{!book.edit}"/>
+                            <h:inputTextarea value="#{book.descr}" rendered="#{booksController.editMode and book.edit}"
+                            styleClass="descr_edit"/>
+                        </p>
                     </div>
                 </h:column>
+
+                <h:column>
+                    <h:selectBooleanCheckbox value="#{book.edit}" rendered="#{!booksController.editMode}"/>
+                </h:column>
             </h:dataTable>
+                <!--end booksForm-->
+            </h:form>
+            <!--end content-->
         </ui:define>
 
         <ui:define name="paginator">
@@ -72,7 +124,7 @@
                 <h:commandLink value="#{pageNumbers}"
                                styleClass="#{pageNumbers == booksController.selectedPageNumber ? 'selected_page' : ''}">
                     <f:param value="#{pageNumbers}" name="page_number"/>
-                    <f:ajax event="click" render="@form :pages :booksList :lettersForm"
+                    <f:ajax event="click" render="@form :pages booksForm:booksList :lettersForm"
                             listener="#{booksController.selectedPage}"/>
                 </h:commandLink>
             </ui:repeat>

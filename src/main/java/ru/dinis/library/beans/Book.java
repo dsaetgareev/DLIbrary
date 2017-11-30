@@ -51,6 +51,10 @@ public class Book implements Serializable {
      * book's description.
      */
     private String descr;
+    /**
+     * edit.
+     */
+    private boolean edit;
 
     /**
      * constructor.
@@ -233,5 +237,13 @@ public class Book implements Serializable {
      */
     public void setDescr(String descr) {
         this.descr = descr;
+    }
+
+    public boolean isEdit() {
+        return edit;
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
     }
 }
