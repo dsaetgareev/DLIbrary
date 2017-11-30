@@ -76,26 +76,26 @@
                             <f:param value="#{book.name}" name="filename"/>
                         </h:outputLink>
                     </h:form>
+                    <div>
                     <h:panelGroup id="admin_tools">
                         <h:commandLink rendered="#{!booksController.editMode}" styleClass="adm_link">
                             <h:outputText value="#{msg.add_book}" styleClass="adm_link"/>
                             <f:ajax execute="@form" render="@form"/>
                         </h:commandLink>
-                        <h:commandLink action="#{booksController.enableEdit}" rendered="#{!booksController.editMode}"
-                                       >
-                            <h:outputText value="#{msg.edit}" styleClass="adm_link"/>
+                        <h:commandLink action="#{booksController.enableEdit}" rendered="#{!booksController.editMode}">                          <h:outputText value="#{msg.edit}" styleClass="adm_link"/>
                             <f:ajax execute="@form" render="@form"/>
                         </h:commandLink>
 
                         <h:commandButton action="#{booksController.editBooks}" value="#{msg.save}"
-                                         rendered="#{booksController.editMode}">
+                                         rendered="#{booksController.editMode and book.edit}">
                             <f:ajax execute="@form" render="@form"/>
                         </h:commandButton>
                         <h:commandButton action="#{booksController.chancelEdit}" value="#{msg.cancel}"
-                                         rendered="#{booksController.editMode}" immediate="true">
+                                         rendered="#{booksController.editMode and book.edit}" immediate="true">
                             <f:ajax execute="@form" render="@form"/>
                         </h:commandButton>
                     </h:panelGroup>
+                    </div>
                 </h:column>
                 <h:column>
                     <div class="book_details">

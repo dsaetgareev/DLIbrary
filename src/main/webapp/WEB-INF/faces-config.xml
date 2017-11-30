@@ -76,6 +76,11 @@
     <managed-bean>
         <managed-bean-name>searchController</managed-bean-name>
         <managed-bean-class>ru.dinis.library.controllers.SearchController</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean eager="true">
+        <managed-bean-name>localeController</managed-bean-name>
+        <managed-bean-class>ru.dinis.library.controllers.LocaleController</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 </faces-config>

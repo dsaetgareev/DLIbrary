@@ -97,7 +97,7 @@ public class Book implements Serializable {
 
     /**
      * gets content.
-     * @return
+     * @return contetn
      */
     public byte[] getContent() {
         return content;
@@ -105,7 +105,7 @@ public class Book implements Serializable {
 
     /**
      * sets content.
-     * @param content
+     * @param content content
      */
     public void setContent(byte[] content) {
         this.content = content;

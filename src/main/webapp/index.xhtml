@@ -11,8 +11,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view locale="#{localeController.currentLocale}"/>
 <h:head>
     <title>#{msg.welcome_tile}</title>
     <h:outputStylesheet library="css" name="style_index.css"/>
@@ -66,6 +66,8 @@
                     </tr>
                 </table>
             </h:form>
+
+            <ui:include src="templates/locale.xhtml"/>
             <!--end login div-->
         </div>
 
@@ -76,5 +78,6 @@
         <!--end main-->
     </div>
 </h:body>
+
 
 </html>

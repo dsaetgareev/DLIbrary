@@ -23,13 +23,14 @@ public class PdfContent extends HttpServlet {
            int id = Integer.valueOf(request.getParameter("content_id"));
             Boolean save = Boolean.valueOf(request.getParameter("save"));
             String filename = request.getParameter("filename");
+            String name =  URLEncoder.encode(filename, "utf-8") + ".pdf";
             BooksController booksController =
                     (BooksController) request.getSession(false).getAttribute("booksController");
             byte[] content = booksController.getContent(id);
             response.setContentLength(content.length);
             if (save) {
                 response.setHeader("Content-Disposition",
-                        "attachment;filename=" + URLEncoder.encode(filename, "utf-8") + ".pdf");
+                        "attachment;filename=" + name);
             }
             out.write(content);
         } catch (Exception e) {

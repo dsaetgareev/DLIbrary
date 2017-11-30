@@ -148,6 +148,7 @@ public class BooksController implements Serializable {
      * fill all books.
      */
     public String fillBooksAll() {
+
         this.fillBooksBySql("select b.id, b.name, b.page_count, b.isbn, g.name as genre, a.fio as author," +
                 "b.publish_year, p.name as publisher, b.descr FROM book b " +
                 "INNER JOIN author a ON b.author_id = a.id " +
@@ -200,7 +201,7 @@ public class BooksController implements Serializable {
                 "INNER JOIN genre g ON b.genre_id = g.id " +
                 "INNER JOIN publisher p ON b.publisher_id = p.id ");
         if (this.searchType == SearchType.AUTHOR) {
-            stringBuilder.append(" WHERE LOWER(author) LIKE '%" + this.searchString.toLowerCase() + "%' order by b.name");
+            stringBuilder.append(" WHERE LOWER(a.fio) LIKE '%" + this.searchString.toLowerCase() + "%' order by b.name");
         }
         if (this.searchType == SearchType.TITLE) {
             stringBuilder.append(" WHERE LOWER(b.name) LIKE '%" + this.searchString.toLowerCase() + "%' order by b.name");

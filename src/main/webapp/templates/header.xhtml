@@ -29,6 +29,9 @@
             <!--end descr-->
         </div>
         <div class="welcome">
+
+            <ui:include src="/templates/locale.xhtml"/>
+
             <p>#{msg.welcome_user}, #{user.name}</p>
             <h:form>
                 <h:commandLink action="/index?faces-redirect=true" value="#{msg.exit}"/>
