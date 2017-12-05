@@ -43,17 +43,17 @@
                     <tr>
                         <td align="left">#{msg.input_password}</td>
                         <td>
-                            <h:inputText id="password" value="#{user.password}" rendered="true"
+                            <h:inputSecret id="password" value="#{user.password}" rendered="true"
                                          requiredMessage="#{msg.password_required}">
                                 <f:validator validatorId="ru.dinis.library.validators.PasswordValidator"/>
                                 <f:ajax event="keyup" render="passwordError"/>
-                            </h:inputText>
+                            </h:inputSecret>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                        <h:commandButton action="pages/books?faces-redirect=true" value="#{msg.entry}"
+                        <h:commandButton action="#{user.login}" value="#{msg.entry}"
                                          styleClass="button" onclick="return checkValue(this.form,
                                          '#{msg.login_required}');"/>
                     </td>

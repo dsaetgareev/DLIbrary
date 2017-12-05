@@ -18,6 +18,9 @@
             <from-outcome>books</from-outcome>
             <to-view-id>/pages/books.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/pages/books.xhtml</from-view-id>

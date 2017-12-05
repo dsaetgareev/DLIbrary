@@ -34,7 +34,7 @@
 
             <p>#{msg.welcome_user}, #{user.name}</p>
             <h:form>
-                <h:commandLink action="/index?faces-redirect=true" value="#{msg.exit}"/>
+                <h:commandLink action="#{user.logout}" value="#{msg.exit}"/>
             </h:form>
             <!--end welcome-->
         </div>
